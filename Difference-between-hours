@@ -1,0 +1,38 @@
+CREATE FUNCTION [#FunctionName] (@DTINICIO DATETIME, @DTFIM DATETIME)      
+      
+RETURNS NVARCHAR(10)      
+      
+AS      
+      
+BEGIN      
+    DECLARE @RESULT NVARCHAR(10)
+	DECLARE @MINUTOS INT
+    SET @MINUTOS  = (SELECT DATEDIFF(N, @DTINICIO,@DTFIM) )
+        
+   
+SELECT @RESULT =
+-- Caso a diferença seja entre - 1 minuto e -59 minutos a função irá atribuir sózinha o sinal de subtração.
+-- Em determinadas condições tive retornos como: 00:-2 ou -1:-2
+ CASE WHEN @MINUTOS BETWEEN -59 AND -1 
+ THEN
+ 
+	  RIGHT('-0' +CAST (@MINUTOS /60   AS VARCHAR),3) 
+	   + ':' + 
+	   RIGHT('0' + 
+				REPLACE (CAST (@MINUTOS - ((@MINUTOS / 60) * 60) AS VARCHAR),'-','')
+				,2)
+	   + ':00' 
+ELSE
+	  RIGHT('0' +CAST (@MINUTOS /60   AS VARCHAR),2) 
+	   + ':' + 
+	   RIGHT('0' + 
+			 REPLACE (CAST (@MINUTOS - ((@MINUTOS / 60) * 60) AS VARCHAR),'-','')
+				,2)
+		+ ':00' 
+END  
+     
+RETURN @RESULT;      
+
+END; 
+ 
+  
