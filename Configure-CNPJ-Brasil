@@ -1,0 +1,22 @@
+CREATE FUNCTION [#FunctionName]   
+     (@CNPJ VARCHAR(14) )  
+
+     RETURNS VARCHAR(20)  
+AS
+BEGIN
+ DECLARE @RETORNO VARCHAR (20) 
+
+-- Para formatar CNPJ:
+
+ SET @CNPJ = REPLICATE(0, 14 - LEN(@CNPJ)) + @CNPJ 
+
+RETURN SUBSTRING(@CNPJ,1,2) + '.'
++ SUBSTRING(@CNPJ,3,3) + '.'
++ SUBSTRING(@CNPJ,6,3) + '/'
++ SUBSTRING(@CNPJ,9,4) + '-'
++ SUBSTRING(@CNPJ,13,2)
+  	 
+END
+
+GO
+ 
